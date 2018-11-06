@@ -1,0 +1,3 @@
+---
+- name : copy vhost file
+  template: src=temp.j2   dest={{ app_dir }}/nginx/conf/vhosts/{{ yn_log }}.conf

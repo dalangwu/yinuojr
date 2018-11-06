@@ -1,0 +1,15 @@
+---
+- name: mkdir dir
+  shell: "[ -d {{ download_dir }} ]||mkdir -p  {{ download_dir }}"
+- name: nginx parket
+  copy: src=../files/nginx-1.12.2-1.x86_64.rpm dest={{ download_dir }}
+- name: make istall nginx
+  shell: yum localinstall   {{ download_dir }}/nginx-1.12.2-1.x86_64.rpm  -y  && ln -sf  {{ app_dir }}/nginx/sbin/nginx /sbin/nginx
+- name: copy nginx config file
+  template: src=nginx.conf   dest={{ app_dir }}/nginx/conf/nginx.conf
+- name: copy nginx.service file
+  template: src=nginx.service   dest=/lib/systemd/system/nginx.service
+  notify:
+    - restart nginx service
+- name: start nginx service
+  service: name=nginx state=started

@@ -1,0 +1,97 @@
+server {
+        listen       80 ;
+        server_name  {{ yn_domain }};
+        rewrite ^(.*)$  https://$host$1 permanent;
+}
+
+server {
+        listen       443 ;
+        access_log  logs/{{ yn_log }}.ssl.access.log;
+        error_log   logs/{{ yn_log }}.error_ssl.log;
+        server_name  pre-mb.yinuojr.cn;
+        autoindex on;
+        ssl                  on;
+        ssl_certificate      /bubidata/server/nginx/conf/{{ yn_cer }};
+        ssl_certificate_key  /bubidata/server/nginx/conf/{{ yn_key }};
+        ssl_session_timeout  5m;
+        ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+        ssl_prefer_server_ciphers   on;
+
+        location / {
+            root  {{ yn_webdir }};
+            index index.html service.html;
+        }
+
+        #location ~ .*\.(gif|jpg|png|jpeg|json|htm|html|scss|css|js|flv|swf|zip|rar|ttf|)$  {
+        #  expires 3d;
+        #}
+
+
+        location = /favicon.ico {
+          log_not_found off;
+          access_log off;
+        } 
+        location /service/file/upload {
+                    proxy_redirect off;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Accept-Encoding 'gzip';
+                    proxy_set_header platform '{{ yn_tag }}';
+                    proxy_pass http://{{ yn_gateway }}:12009/gateway$request_uri;
+                }
+        location /uaa {
+                    proxy_redirect off;
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header Accept-Encoding 'gzip';
+                    proxy_set_header platform '{{ yn_tag }}';
+                    proxy_pass http://{{ yn_gateway }}:12009;
+        }
+
+
+        location /expenses {
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Accept-Encoding 'gzip';
+            proxy_set_header platform '{{ yn_tag }}';
+            proxy_pass http://{{ yn_gateway }}:12009;
+         }
+
+
+        location /service {
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Accept-Encoding 'gzip';
+            proxy_pass http://{{ yn_gateway }}:12009/service;
+            proxy_set_header platform "{{ yn_tag }}";
+        } 
+
+        location /api {
+                proxy_redirect off;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                 proxy_set_header Accept-Encoding 'gzip';
+                 proxy_set_header platform '{{ yn_tag }}';
+                 proxy_pass http://{{ yn_gateway }}:12009;
+        }
+
+        location /api/oss/file/upload {
+                 proxy_redirect off;
+                 proxy_set_header Host $host;
+                 proxy_set_header X-Real-IP $remote_addr;
+                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                 proxy_set_header Accept-Encoding 'gzip';
+                 proxy_set_header platform '{{ yn_tag }}';
+                 proxy_pass http://{{ yn_gateway }}:12009/gateway$request_uri;
+                 client_max_body_size 100m;
+         }
+
+}

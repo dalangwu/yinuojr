@@ -1,0 +1,13 @@
+---
+- hosts: 192.168.2.58
+  vars:
+     yn_domain: pre-mb.yinuojr.cn
+     yn_log: pre_mb
+     yn_cer: server.cer
+     yn_key: server.key
+     yn_webdir: /bubidata/server/nginx/html/platform_yinuojr
+     yn_tag: mibu
+     yn_gateway: gateway.yinuojr.local
+  roles:
+    - common
+    - {role: vhost ,tags: vhost}

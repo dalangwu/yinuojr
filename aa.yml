@@ -1,3 +1,0 @@
-- name: Hello World Sample
-  hosts: all
-  shell: ansible   -i /tmp/hosts  'all'  -m command  -a 'echo -e " 紫色字 "'
