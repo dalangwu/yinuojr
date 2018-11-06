@@ -1,14 +1,7 @@
 ---
 - hosts: all
   tasks:
-   - name: debug loops
-     vars:
-        yn_domain: pre-mb.yinuojr.cn
-        yn_log: pre_mb
-        yn_cer: server.cer
-        yn_key: server.key
-        yn_webdir: /bubidata/server/nginx/html/platform_yinuojr
-        yn_tag: mibu
-        yn_gateway: gateway.yinuojr.local
-
-     template: src=temp.j2   dest=/home/wuwenyu/{{ yn_log }}.conf
+  - name: test playbook
+    command: "sshpass  -pbubi ssh  -o StrictHostKeyChecking=no root@192.168.2.40  'md5sum  /home/jekins/.jenkins/workspace/test-yinuojr-gateway/target/yinuojr-gateway.zip'"
+    register: check_out
+  - debug: msg={{check_out.stdout_lines}}
