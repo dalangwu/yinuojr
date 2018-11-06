@@ -1,0 +1,6 @@
+- hosts: all
+  tasks:
+  - name: test playbook
+    command: 'df -h'
+    register: check_out
+  - debug: msg={{check_out.stdout}}
