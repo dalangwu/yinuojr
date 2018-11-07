@@ -2,6 +2,6 @@
 - hosts: all
   tasks:
   - name: test playbook
-    command: "sshpass  -pbubi ssh  -o StrictHostKeyChecking=no root@192.168.2.40  'md5sum  /home/jekins/.jenkins/workspace/test-yinuojr-gateway/target/yinuojr-gateway.zip'"
+    command: "sshpass  -pbubi ssh  -o StrictHostKeyChecking=no root@192.168.2.40  'ls /home/jekins/.jenkins/workspace/test-yinuojr-gateway/target/yinuojr-gateway.zip;md5sum  /home/jekins/.jenkins/workspace/test-yinuojr-gateway/target/yinuojr-gateway.zip'"
     register: check_out
   - debug: msg={{check_out.stdout_lines}}
